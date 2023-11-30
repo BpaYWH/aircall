@@ -32,6 +32,8 @@ export const stackCalls = (data, filter = "", isReverse = false) => {
         filtered.push(call);
       }
     });
+  } else {
+    filtered = data;
   }
 
   // stack the same consecutive calls, added "repeat", "nextCalls", and "isSkipDate" key to a call
