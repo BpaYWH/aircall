@@ -96,7 +96,7 @@ function CallDetailDialog({ onClose, callId, ...other }) {
             <Typography variant="body2">To: {data.to}</Typography>
             <Typography variant="body2">Via: {data.via}</Typography>
             <Typography variant="caption">
-              {moment.duration(data.duration).humanize()}
+              {moment.duration(data.duration, "seconds").humanize()}
             </Typography>
           </DialogContent>
 
