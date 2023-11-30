@@ -77,11 +77,7 @@ const ActivityFeed = () => {
   }, []);
 
   useEffect(() => {
-    if (isChronological) {
-      setProcessedData(stackCalls(callData, tab));
-    } else {
-      setProcessedData(stackCalls(callData, tab).reverse());
-    }
+    setProcessedData(stackCalls(callData, tab, !isChronological));
   }, [tab, callData, isChronological]);
 
   return (

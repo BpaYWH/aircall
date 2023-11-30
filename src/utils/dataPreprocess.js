@@ -16,21 +16,33 @@ export const cleanCalls = (data) => {
   );
 };
 
-export const stackCalls = (data, filter = "") => {
+export const stackCalls = (data, filter = "", isReverse = false) => {
   if (!data) return [];
 
+  let filtered = [];
   let stacked = [];
-  let processed = [];
   let isArhivedRequired = filter === "archived";
 
+  data = isReverse ? [...data].reverse() : data;
+
+  // filtered by is_archive === isArhivedRequired
+  if (filter !== "") {
+    data.forEach((call) => {
+      if (call.is_archived === isArhivedRequired) {
+        filtered.push(call);
+      }
+    });
+  }
+
   // stack the same consecutive calls, added "repeat", "nextCalls", and "isSkipDate" key to a call
-  data.forEach((call) => {
+  filtered.forEach((call) => {
     const newCall = { ...call, repeat: 1, nextCalls: [], isSkipDate: false };
 
     if (stacked.length === 0) {
       stacked.push(newCall);
     } else {
       let previousData = stacked[stacked.length - 1];
+
       if (
         newCall.from === previousData.from &&
         newCall.to === previousData.to &&
@@ -51,30 +63,5 @@ export const stackCalls = (data, filter = "") => {
     }
   });
 
-  // early return if no filter is "", i.e. Tab "All" is selected
-  if (filter === "") return stacked;
-
-  // filtered by is_archive === isArhivedRequired
-  stacked.forEach((call) => {
-    if (call.nextCalls.length > 0) {
-      call.nextCalls = call.nextCalls.filter(
-        (nextCall) => nextCall.is_archived === isArhivedRequired
-      );
-    }
-
-    if (call.is_archived === isArhivedRequired) {
-      processed.push(call);
-    } else {
-      if (call.nextCalls.length > 0) {
-        let newCall = call.nextCalls[0];
-
-        newCall.repeat = call.repeat - 1;
-        newCall.nextCalls = call.nextCalls.slice(1);
-
-        processed.push(newCall);
-      }
-    }
-  });
-
-  return processed;
+  return stacked;
 };

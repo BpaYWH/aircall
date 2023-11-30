@@ -4,7 +4,7 @@ const CallContext = createContext();
 
 const CallProvider = ({ children }) => {
   const [tab, setTab] = useState("inbox");
-  const [callData, setCallData] = useState(null);
+  const [callData, setCallData] = useState([]);
   const [isChronological, setIsChronological] = useState(false);
 
   return (
