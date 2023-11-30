@@ -107,9 +107,11 @@ const ActivityFeed = () => {
 
               {processedData.map((call) => (
                 <div key={`call-${call.id}`} className={classes.callContainer}>
-                  <Typography variant="subtitle2" align="center">
-                    {moment(call.created_at).format("MMMM, D YYYY")}
-                  </Typography>
+                  {!call.isSkipDate && (
+                    <Typography variant="subtitle2" align="center">
+                      {moment(call.created_at).format("MMMM, D YYYY")}
+                    </Typography>
+                  )}
                   {call.repeat > 1 && <CallCardList call={call} />}
                   {call.repeat <= 1 && <CallCard call={call} />}
                 </div>

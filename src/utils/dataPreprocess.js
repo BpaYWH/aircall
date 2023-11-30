@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const cleanCalls = (data) => {
   // filter all the invalid data
   return data.filter(
@@ -21,9 +23,9 @@ export const stackCalls = (data, filter = "") => {
   let processed = [];
   let isArhivedRequired = filter === "archived";
 
-  // stack the same consecutive calls, added "repeat" and "nextCalls" key to a call
+  // stack the same consecutive calls, added "repeat", "nextCalls", and "isSkipDate" key to a call
   data.forEach((call) => {
-    const newCall = { ...call, repeat: 1, nextCalls: [] };
+    const newCall = { ...call, repeat: 1, nextCalls: [], isSkipDate: false };
 
     if (stacked.length === 0) {
       stacked.push(newCall);
@@ -38,6 +40,12 @@ export const stackCalls = (data, filter = "") => {
         previousData.repeat++;
         previousData.nextCalls.push(newCall);
       } else {
+        if (
+          moment(newCall.created_at).format("MMMM D YYYY") ===
+          moment(previousData.created_at).format("MMMM D YYYY")
+        ) {
+          newCall.isSkipDate = true;
+        }
         stacked.push(newCall);
       }
     }
